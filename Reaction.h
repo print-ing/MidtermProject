@@ -15,4 +15,5 @@ public:
     double getPositive() const;
     double getNegative() const;
 
+    void TestReacion();
 };

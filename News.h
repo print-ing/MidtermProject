@@ -25,6 +25,7 @@ public:
     string getSubcategory(string category) const;
     void filterSpamComment(const vector<string>& fwords);
 
+    void testNews();
 };
 
 

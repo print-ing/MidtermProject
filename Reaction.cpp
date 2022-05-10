@@ -35,3 +35,14 @@ double Reaction::getNegative() const
     double percent = (negative / (double)total) * 100;
     return percent;
 }
+
+void Reaction::TestReacion()
+{
+    Reaction test_reaction;
+    test_reaction.PlusPositive();
+    test_reaction.PlusPositive();
+    test_reaction.PlusNegative();
+    cout << "현재 Reaciton의 긍정적인 반응 " << test_reaction.getPositive() << endl;
+    cout << "현재 Reaciton의 부정적인 반응 " << test_reaction.getNegative() << endl;
+}
+

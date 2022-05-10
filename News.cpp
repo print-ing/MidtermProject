@@ -62,3 +62,25 @@ void News::filterSpamComment(const vector<string>& fwords)
 }
 // filter comment that contains fword
 
+void News::testNews()
+{
+    vector<string> test_fword = { "FFFF" };
+    vector<string> test_comment = { "comment1", "FFFF" };
+    News test_news = News("title", "text", test_comment, "media", "field");
+    test_comment.clear();
+    test_news.filterSpamComment(test_fword);
+    
+    cout << test_news.getNewsTitle() << endl;
+    cout << test_news.getNewsText() << endl;
+    cout << test_news.getSubcategory("언론사") << endl;
+    cout << test_news.getSubcategory("분야") << endl;
+
+    test_comment = test_news.getNewsComments();
+    for (int i = 0; i < test_comment.size(); ++i)
+    {
+        cout << test_comment[i] << endl;
+    }
+}
+
+
+

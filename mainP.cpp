@@ -16,12 +16,14 @@ void readCsvFile(vector<News>& news, vector<string>& fwords);
 vector<string> listComments(string comment);
 vector<string> readCsvRow(istream& in, char delimiter);
 void saveFwords(vector<string>& fwords);
+void setMainCategories(vector<MainCategory>& main_categories, vector<News>& news);
 
 int main()
 {
     Display display;
     UserInteraction user_interaction;
 
+    
     vector<string> fwords;
     saveFwords(fwords);
     vector<News> news;
@@ -30,31 +32,14 @@ int main()
     int index;
     string index_str;
 
-    vector<string> main_category_names = { "언론사", "분야" };
-    map<string, vector<string>> categories;
-    categories.insert({ "언론사", {"SBS", "MBC", "JTBC", "KBS", "조선일보", "연합뉴스", "한겨레"} });
-    categories.insert({ "분야", {"정치", "경제", "사회", "생활/문화", "세계" } });
-    // for saving main categories and subcategories
-
     vector<MainCategory> main_categories;
-    for (int i = 0; i < main_category_names.size(); ++i)
-    {
-        main_categories.push_back(MainCategory());
-        main_categories[i].setMainCategoryName(main_category_names[i]);
-        // save main category name
-        vector<string> subcategory_names = categories.find(main_categories[i].getMainCategoryName())->second;
-        main_categories[i].setSubcategories(news, subcategory_names);
-        // save subcategory name
-    }
-
-
+    setMainCategories(main_categories, news);
 
     cout << "프로그램을 종료하고 싶으시다면 -1을 입력해주세요! \n" << endl;
     while (1) {
 
         cout << "접근하고 싶은 카테고리의 번호를 입력해주세요 :" << endl;
         display.printMainCategoriesList(main_categories);
-
         vector<Subcategory>& sub_categories = user_interaction.selectMainCategory(main_categories, display);
         if (sub_categories.empty())
             break;
@@ -67,20 +52,19 @@ int main()
 
         user_interaction.receiveUserReaction(sub_category.reaction);
         cout << "현재 사람들의 반응입니다." << endl;
-
         display.printNewsReaction(sub_category.reaction);
+
         vector<News*>& select_news = sub_category.getSubcategoryNews();
         if (select_news.empty())
             break;
 
         cout << "보고 싶은 뉴스의 번호를 입력해주세요 :" << endl;
         display.printNewsTitleList(select_news);
-
         News* one_news = user_interaction.selectNews(select_news);
         if (one_news == NULL)
             break;
-        display.printNewsElements(one_news);
 
+        display.printNewsElements(one_news);
         user_interaction.receiveUserReaction(one_news->news_reaction);
         cout << "현재 기사에 대한 사람들의 반응입니다." << endl;
         display.printNewsReaction(one_news->news_reaction);
@@ -94,38 +78,6 @@ int main()
             if (index == -1)
                 break;
         }
-
-        /*
-        select_news = user_interaction.selectSubCategory(sub_categories, display);
-        if (select_news.empty())
-            break;
-        cout << "보고 싶은 뉴스의 번호를 입력해주세요 :" << endl;
-        display.printNewsTitleList(select_news);
-
-        one_news = user_interaction.selectNews(select_news);
-
-        if (one_news == NULL)
-            break;
-        cout << "************" << endl;
-        display.printNewsTitle(one_news->getNewsTitle());
-        cout << "************" << endl;
-        display.printNewsText(one_news->getNewsText());
-        cout << "************" << endl;
-        display.printNewsComments(one_news->getNewsComments());
-        cout << "************" << endl;
-
-        one_news->news_reaction = user_interaction.receiveUserReaction(one_news->news_reaction);
-        positive_news = one_news->news_reaction.getPositive();
-        negative_news = one_news->news_reaction.getNegative();
-
-        display.printNewsReaction(positive_news, negative_news);
-
-        cout << "종료하고 싶으시다면 -1을 입력해주세요!" << endl;
-        cout << "처음으로 돌아가고 싶으시다면 아무숫자나 입력해주세요!" << endl;
-        cin >> index;
-        if (index == -1)
-            break;
-        */
     }
     cout << "프로그램이 종료되었습니다" << endl;
 
@@ -232,4 +184,22 @@ void saveFwords(vector<string>& fwords)
     return;
 }
 
+void setMainCategories(vector<MainCategory>& main_categories, vector<News>& news)
+{
+    vector<string> main_category_names = { "언론사", "분야" };
+    map<string, vector<string>> categories;
+    categories.insert({ "언론사", {"SBS", "MBC", "JTBC", "KBS", "조선일보", "연합뉴스", "한겨레"} });
+    categories.insert({ "분야", {"정치", "경제", "사회", "생활/문화", "세계" } });
+    // for saving main categories and subcategories
 
+    for (int i = 0; i < main_category_names.size(); ++i)
+    {
+        main_categories.push_back(MainCategory());
+        main_categories[i].setMainCategoryName(main_category_names[i]);
+        // save main category name
+        vector<string> subcategory_names = categories.find(main_categories[i].getMainCategoryName())->second;
+        main_categories[i].setSubcategories(news, subcategory_names);
+        // save subcategory name
+    }
+    return;
+}
